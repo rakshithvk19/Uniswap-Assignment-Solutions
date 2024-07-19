@@ -24,5 +24,26 @@ contract ExactSwap {
          */
 
         // your code start here
+
+        IUniswapV2Pair pair = IUniswapV2Pair(pool);
+        (uint256 usdcReserve, uint256 wethReserve,) = pair.getReserves();
+
+        uint256 wethAmountIn = getWethAmountIn(1337 * 1e6, usdcReserve, wethReserve);
+
+        //Transfering the wEth tokens that we own to the pool contract based on calculateAmount1In() calculations.
+        IUniswapV2Pair(weth).transfer(address(pair), wethAmountIn);
+
+        pair.swap(1337 * 1e6, 0, address(this), "");
+    }
+
+    function getWethAmountIn(uint256 usdcAmountOut, uint256 reserveOut, uint256 reserveIn)
+        internal
+        pure
+        returns (uint256 amountIn)
+    {
+        uint256 numerator = reserveIn * usdcAmountOut * 1000;
+        uint256 denominator = ((reserveOut - usdcAmountOut) * 997);
+
+        amountIn = ((numerator / denominator) + 1);
     }
 }

@@ -7,9 +7,10 @@ import "./interfaces/IERC20.sol";
  *
  *  ARBITRAGE A POOL
  *
- * Given two pools where the token pair represents the same underlying; WETH/USDC and WETH/USDT (the formal has the corect price, while the latter doesnt).
- * The challenge is to flash borrowing some USDC (>1000) from `flashLenderPool` to arbitrage the pool(s), then make profit by ensuring MyMevBot contract's USDC balance
- * is more than 0.
+ * Given two pools where the token pair represents the same underlying; WETH/USDC and WETH/USDT (the former has the corect price,
+ * while the latter doesn't).
+ * The challenge is to flash borrowing some USDC (>1000) from `flashLenderPool` to arbitrage the pool(s),
+ * then make profit by ensuring MyMevBot contract's USDC balance is more than 0.
  *
  */
 contract MyMevBot {

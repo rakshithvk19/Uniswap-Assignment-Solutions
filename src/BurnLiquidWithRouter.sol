@@ -2,6 +2,8 @@
 pragma solidity ^0.8.13;
 
 import "./interfaces/IERC20.sol";
+import "./interfaces/IUniswapV2Pair.sol";
+import {console2} from "forge-std/console2.sol";
 
 contract BurnLiquidWithRouter {
     /**
@@ -20,6 +22,15 @@ contract BurnLiquidWithRouter {
 
     function burnLiquidityWithRouter(address pool, address usdc, address weth, uint256 deadline) public {
         // your code start here
+        IUniswapV2Pair pair = IUniswapV2Pair(pool);
+
+        uint256 liquidity = pair.balanceOf(address(this));
+
+        // Approve the router to spend the LP tokens
+        pair.approve(router, liquidity);
+
+        //Invoking removeLiquidity from UniswapV2Router
+        IUniswapV2Router(router).removeLiquidity(usdc, weth, liquidity, 0, 0, address(this), deadline);
     }
 }
 
