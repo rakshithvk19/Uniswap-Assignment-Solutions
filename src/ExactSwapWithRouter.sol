@@ -20,28 +20,22 @@ contract ExactSwapWithRouter {
     function performExactSwapWithRouter(address weth, address usdc, uint256 deadline) public {
         // your code start here
 
-        // Step 1: Define the exact amount of USDC we want to receive
-        uint256 amountOut = 1337 * 10 ** 6; // 1337 USDC
+        //Define the exact amount of USDC we want to receive
+        uint256 amountOut = 1337 * 1e6; // Since usdc has 6 decimals, 1337 * 1e6 represents, 1337 usdc tokens in its smallest unit.
 
-        // Step 2: Calculate the maximum amount of WETH we're willing to spend
-        uint256 amountInMax = 1 ether; // 1 WETH (assuming 18 decimals)
+        //Calculate the maximum amount of WETH we're willing to spend
+        uint256 amountInMax = 1 ether; //
 
-        // Step 3: Create the path array
+        //Create the path array
         address[] memory path = new address[](2);
         path[0] = weth;
         path[1] = usdc;
 
-        // Step 4: Approve the router to spend WETH
+        //Approve the router to spend WETH
         IERC20(weth).approve(router, amountInMax);
 
-        // Step 5: Perform the swap
-        IUniswapV2Router(router).swapTokensForExactTokens(
-            amountOut,
-            amountInMax,
-            path,
-            address(this), // Recipient is this contract
-            deadline
-        );
+        // Perform the swap
+        IUniswapV2Router(router).swapTokensForExactTokens(amountOut, amountInMax, path, address(this), deadline);
     }
 }
 

@@ -20,14 +20,15 @@ contract MultiHop {
     function performMultiHopWithRouter(address mkr, address weth, address elon, uint256 deadline) public {
         // your code start here
 
-        //Creating path array
+        //Instantiating the path array
         address[] memory path = new address[](3);
 
+        //Initializing the variables in the path array.
         path[0] = mkr;
         path[1] = weth;
         path[2] = elon;
 
-        //Fetching the variable to store MKR balance
+        //Fetching the variable to store MKR balance.
         uint256 MKRBalance = IERC20(mkr).balanceOf(address(this));
 
         //Approving the router to spend MKR on our behalf.

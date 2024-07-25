@@ -36,7 +36,7 @@ contract SimpleSwap {
         uint256 wEthAmountOwned = IUniswapV2Pair(weth).balanceOf(address(this));
 
         //Lets get 1000 USDC out of the pool.(For now atleast!)
-        uint256 amount0Out = 1_000 * 1e6;
+        uint256 amount0Out = 1_000 * 1e6; //1e6 is same as 10^6
 
         //Transfering all the wEth tokens that we own to the pool contract. (Just for this assignment!!)
         IUniswapV2Pair(weth).transfer(address(pair), wEthAmountOwned);

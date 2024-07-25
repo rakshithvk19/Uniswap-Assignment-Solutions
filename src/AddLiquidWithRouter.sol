@@ -20,14 +20,14 @@ contract AddLiquidWithRouter {
     }
 
     function addLiquidityWithRouter(address usdcAddress, uint256 deadline) public {
-        // Get the current USDC balance of this contract
+        //Fetch the balance of USDC owned by this contract.
         uint256 usdcBalance = IERC20(usdcAddress).balanceOf(address(this));
-
-        // Approve the router to spend all our USDC
-        IERC20(usdcAddress).approve(router, usdcBalance);
 
         // Get the current ETH balance of this contract
         uint256 ethBalance = address(this).balance;
+
+        // Approve the router to spend the USDC owned.
+        IERC20(usdcAddress).approve(router, usdcBalance);
 
         // Call addLiquidityETH on the router
         IUniswapV2Router(router).addLiquidityETH{value: ethBalance}(

@@ -4,7 +4,6 @@ pragma solidity ^0.8.13;
 
 import "./interfaces/IUniswapV2Pair.sol";
 import "./interfaces/IERC20.sol";
-import {console2} from "forge-std/Test.sol";
 
 contract AddLiquid {
     /**
@@ -22,30 +21,22 @@ contract AddLiquid {
 
         // see available functions here: https://github.com/Uniswap/v2-core/blob/master/contracts/interfaces/IUniswapV2Pair.sol
 
-        /**
-         * Additional research question
-         * 1. Why are we using state variables to capture the balances of each token held in the pool? Why can't we use ERC20's balanceOf() each time to fetch the balance of each token held in the pool?
-         * 2. If one already knows the pool address, then can someone transfer tokens directly to the pools address?
-         * 3. Does the code follow CEI pattern ?
-         */
-        /**
-         * Represents the state variable that captures the value of tokens held by the pool which is contextualized to the state of the pool.
-         * This is different from using ERC20's balanceOf() on the pool address.
-         * The reason we are using a state variable reserve instead of using balanceOf() every time is to prevent price manipulation
-         * A trader can directly send a huge amount of a single token to the pool manipulating its price and perform a profitable swap.
-         */
         (uint112 reserve0, uint112 reserve1,) = pair.getReserves();
         require(reserve0 == usdcReserve && reserve1 == wethReserve, "Incorrect reserve values");
 
+        //Amount of tokens held by the current contract.
         uint256 balance0 = IERC20(usdc).balanceOf(address(this));
         uint256 balance1 = IERC20(weth).balanceOf(address(this));
+
+        //Initializing local variable to calculate the optimal amount of tokens.
+        uint256 amount0;
+        uint256 amount1;
 
         // Calculate the optimal amounts to add liquidity in the same ratio as the pool
         uint256 amount0Optimal = (balance1 * reserve0) / reserve1;
         uint256 amount1Optimal = (balance0 * reserve1) / reserve0;
 
-        uint256 amount0;
-        uint256 amount1;
+        //Calculations for number of token0 and token1 to add.
         if (amount0Optimal <= balance0) {
             amount0 = amount0Optimal;
             amount1 = balance1;
@@ -54,22 +45,16 @@ contract AddLiquid {
             amount1 = amount1Optimal;
         }
 
-        // Approve the pair contract to spend tokens
+        // Approve the pair contract to spend tokens.
         IERC20(usdc).approve(pool, amount0);
         IERC20(weth).approve(pool, amount1);
 
-        // Transfer tokens to the pair contract
+        // Transfer tokens to the pool contract.
         IERC20(usdc).transfer(pool, amount0);
         IERC20(weth).transfer(pool, amount1);
 
         // Mint the LP tokens to msg.sender
         pair.mint(msg.sender);
-
-        // Optionally, you can calculate and return the liquidity minted
-        // uint256 liquidity = pair.balanceOf(msg.sender) - liquidityBefore;
-
-        // Emit an event if needed
-        // emit LiquidityAdded(msg.sender, amount0, amount1, liquidity);
     }
 
     // Internal function

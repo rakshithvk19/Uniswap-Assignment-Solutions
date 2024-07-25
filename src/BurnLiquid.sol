@@ -3,7 +3,6 @@ pragma solidity ^0.8.13;
 
 import "./interfaces/IUniswapV2Pair.sol";
 import "./interfaces/IERC20.sol";
-import {console2} from "forge-std/Test.sol";
 
 contract BurnLiquid {
     /**
@@ -22,18 +21,16 @@ contract BurnLiquid {
          */
         // your code here
 
-        //Fetching an instance of UniswapV2Pair
+        //Fetching an instance of UniswapV2Pair.
         IUniswapV2Pair pair = IUniswapV2Pair(pool);
 
-        //Syncing the pool to make sure the reserves are upto date.
-        pair.sync();
-
-        //Fetching the number of LP tokens or Liquidity this contract holds
+        //Fetching the number of LP tokens this contract owns.
         uint256 liquidity = pair.balanceOf(address(this));
 
         //Transfering the LP tokens back to the pool so that it can burn it and transfer back our share of tokens provided.
         pair.transfer(pool, liquidity);
 
+        //Burning LP tokens to receive our liquidity back.
         pair.burn(address(this));
     }
 }
